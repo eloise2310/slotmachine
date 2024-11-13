@@ -69,14 +69,14 @@ def print_slot_machine(columns):
 def deposit():
     while True:
         amount = input("How much would you like to deposit? £")
-        if amount.isdigit():
-            amount = int(amount) # turns to integer - default is string 
+        if amount.replace('.', '', 1).isdigit() and amount.count('.') <= 1:
+            amount = float(amount) # turns to integer - default is string 
             if amount > 0:
                 break # if it is a valid number, break out of while loop, if not continue in loop
             else: 
                 print("Amount must be greater than 0.")
         else:
-            print("Please enter a number")
+            print("Please enter a valid number")
 
     return amount 
 
@@ -97,14 +97,14 @@ def get_number_of_lines():
 def get_bet():
     while True:
         amount = input("How much would you like to bet on each line? £")
-        if amount.isdigit():
-            amount = int(amount) # turns to integer - default is string 
+        if amount.replace('.', '', 1).isdigit() and amount.count('.') <= 1:
+            amount = float(amount) # turns to integer - default is string 
             if MIN_BET <= amount <= MAX_BET:
                 break # if it is a valid number, break out of while loop, if not continue in loop
             else: 
                 print(f"Amount must be between £{MIN_BET} - £{MAX_BET}")
         else:
-            print("Please enter a number")
+            print("Please enter a valid number")
     
     return amount
 
@@ -115,16 +115,16 @@ def spin(balance):
         total_bet = bet * lines
 
         if total_bet > balance:
-            print(f"Insufficient funds, your current balance is £{balance}")
+            print(f"Insufficient funds, your current balance is £{balance:.2f}")
         else:
             break 
 
-    print(f"You are betting £{bet} on {lines} lines. Your total bet is: £{total_bet}")
+    print(f"You are betting £{bet:.2f} on {lines} lines. Your total bet is: £{total_bet:.2f}")
 
     slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
     print_slot_machine(slots)
     winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
-    print(f"You have won: £{winnings}!")
+    print(f"You have won: £{winnings:.2f}!")
     print(f"You won on lines:", *winning_lines)
 
     return winnings - total_bet
@@ -133,12 +133,12 @@ def spin(balance):
 def main():
     balance = deposit() 
     while True:
-        print(f"Current balance is £{balance}")
+        print(f"Current balance is £{balance:.2f}")
         answer = input("Press enter to play (q to quit)")
         if answer == "q":
             break
         balance += spin(balance)
 
-    print(f"You left with £{balance}")
+    print(f"You left with £{balance:.2f}")
 
 main()
